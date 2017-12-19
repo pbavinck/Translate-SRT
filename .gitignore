@@ -58,6 +58,5 @@ typings/
 .env
 
 #Google Cloud and other stuff
-.gcloudignore
 .vscode/
 plb_private_comments.js
