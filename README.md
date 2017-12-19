@@ -1,4 +1,4 @@
-** Disclaimer: This is not an officially supported Google product. Written code can be used as a baseline, it's not meant for production usage. **
+**Disclaimer: This is not an officially supported Google product. Written code can be used as a baseline, it's not meant for production usage.**
 
 ## Translate-SRT
 
