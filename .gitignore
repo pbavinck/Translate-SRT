@@ -57,3 +57,6 @@ typings/
 # dotenv environment variables file
 .env
 
+#Google Cloud and other stuff
+.gcloudignore
+.vscode/

@@ -1,0 +1,22 @@
+{
+  "name": "translate-demo",
+  "version": "0.0.1",
+  "description": "Google Translate demo",
+  "main": "index.js",
+  "dependencies": {
+    "@google-cloud/storage": "^1.5.1",
+    "@google-cloud/translate": "^1.1.0"
+  },
+  "scripts": {
+    "test": "node ./test.js"
+  },
+  "author": "Peter Bavinck",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^4.13.1",
+    "eslint-config-google": "^0.9.1",
+    "eslint-config-standard": "^11.0.0-beta.0",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1"
+  }
+}
