@@ -1,10 +1,37 @@
+/**
+ * Copyright 2017, Google, Inc.
+ * Licensed under the Apache License, Version 2.0 (the "License")
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 /*eslint no-console: 0 */
 'use strict';
+require('dotenv').config();
 
 /**
  * Google Cloud Function, single module, with single exported function.
  * @module index
+ * The SRT format looks like:
+ * 1
+ * 00:00:22,439 --> 00:00:24,304
+ * A sentence
+ * 
+ * 2
+ * 00:00:25,108 --> 00:00:26,769
+ * Sentence split over
+ * two lines
+ *
+ * ...
+ * So, one line with an index, one line with timestamp info, one or more lines with sentences and one empty line
  */
 
 // The two main cloud API's used
@@ -15,7 +42,7 @@ const Translate = require('@google-cloud/translate');
 const fs = require('fs');
 const path = require('path');
 
-const TARGET_BUCKET = 'cclabs-translate-target';          // Change the bucket name to your own
+const TARGET_BUCKET = process.env.TARGET_BUCKET;
 const MAX_SEGMENT_SIZE = 128;                             // The max number of sentences to translate with single request
 const SOURCE_LANGUAGE = 'en';                             // Language to translate from
 const TARGET_LANGUAGE = 'nl';                             // Language to translate to
@@ -171,7 +198,7 @@ exports.translateSRTFiles = (event) => {
  */
 function processData(data) {
   // Convert single string to array of individual lines
-  let arrData = data.split(/\n/);
+  let structure = data.split(/\n/);
 
   // Prepare the structure
   let resultData = {
@@ -181,33 +208,33 @@ function processData(data) {
   };
   
   // Fill the data structure and detect lines that need translation
-  arrData.forEach( (element, index) => {
-    let m = element.match(REGEX_INDEX_LINE);
-    if(m) {
-      //console.log(`Line number: ${m[0]}`);
-      resultData.sentences.push(m[0]);
-      resultData.output.push(m[0]);
+  structure.forEach( (element, index) => {
+    let matches = element.match(REGEX_INDEX_LINE);
+    if(matches) {
+      // Line ooks like a single number
+      resultData.sentences.push(matches[0]);
+      resultData.output.push(matches[0]);
       return;
     }
   
-    m = element.match(REGEX_TIMESTAMP_LINE);
-    if(m) {
-      //console.log(`Timestamp ${m[0]}`);
-      resultData.sentences.push(m[0]);
-      resultData.output.push(m[0]);
+    matches = element.match(REGEX_TIMESTAMP_LINE);
+    if(matches) {
+      // Line looks like 00:00:22,439 --> 00:00:24,304
+      resultData.sentences.push(matches[0]);
+      resultData.output.push(matches[0]);
       return;
     }
   
     if(element === '') {
-      //console.log('Empty:');
+      // Empty line
       resultData.sentences.push('');
       resultData.output.push('');
       return;
     } else {
-      //console.log(`Translatable: ${element}`);
+      // Only other option, a line that needs to be translated
       resultData.sentences.push(element);
       resultData.output.push(element);      // default the untranslated string in the output
-      resultData.requestLines.push(index); 
+      resultData.requestLines.push(index);  // Store the index to the line to insert the translations back at the right positions
       return;
     }
 
@@ -217,12 +244,3 @@ function processData(data) {
   return resultData;
 }
 
-/*
-{
-  'name': 'sample-en.txt',
-  'bucket': 'cclabs-translate',
-  'contentType': 'text/plain'
-}
-*/
-
-/* gcloud beta functions deploy translateTxtFiles --stage-bucket gs://cclabs-functions-staging --trigger-bucket gs://cclabs-translate */
