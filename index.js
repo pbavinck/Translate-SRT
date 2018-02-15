@@ -68,7 +68,7 @@ exports.translateSRTFiles = (event) => {
 
   const file = storage.bucket(object.bucket).file(object.name);
 
-  // Construct the fiename of the output file
+  // Construct the filename of the output file
   const translatedFilename = path.parse(file.name).base.replace(`-${SOURCE_LANGUAGE}`,`-${TARGET_LANGUAGE}`);
   let content;
   
