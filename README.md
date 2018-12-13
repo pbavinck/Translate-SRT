@@ -42,9 +42,28 @@ We assume you already have `nodeJS` and `npm` installed. Before you can run the 
 
 1. Copy the file `.env_sample` to a new file with the name `.env`
 
-1. Enter your source and target bucket names in the environment variables `TEST_BUCKET` and `TARGET_BUCKET` in this new file
+1. Enter your source and target bucket names in the environment variables `TEST_BUCKET` and `TARGET_BUCKET` as well
 
-1. Put a sample text file in SubRip format in your source bucket
+1. Add the location of your [service account credentials](https://cloud.google.com/docs/authentication/getting-started#creating_a_service_account) to `GOOGLE_APPLICATION_CREDENTIALS` environment variable.This enables the client libraries to use the [application default credentials](https://cloud.google.com/docs/authentication/production). In VSCode this can be done by adding the following `env` line to your `launch.json`.
+
+```json
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Program",
+      "program": "${workspaceFolder}/index.js",
+      "env": { "GOOGLE_APPLICATION_CREDENTIALS": "/the-path-to-my/service-account-credentials.json" }
+    }
+  ]
+}
+```
+1. Put a sample text file in SubRip format in your source bucket (with extension .txt as opposed to .srt)
 
 1. Run the test using the command:
 
@@ -61,7 +80,7 @@ Translations done.
 20 segments returned
 Writing translated file locally to /tmp/sample-nl.txt.
 Uploading local file sample-nl.txt to bucket <<target bucket>
-/tmp/sample-nl.txt uploaded to <<target buckey>
+/tmp/sample-nl.txt uploaded to <<target bucket>
 Deleting local file /tmp/sample-nl.txt
 Finished.
 ```
@@ -70,7 +89,7 @@ Finished.
 
 1.  Use the following command to deploy the code to Google Cloud Function.
 
-        gcloud beta functions deploy translateSRTFiles --stage-bucket <<staging bucket name>> --trigger-bucket <<source bucket name>>
+        gcloud functions deploy translateSRTFiles --stage-bucket <<staging bucket name>> --trigger-bucket <<source bucket name>>
 
 1.  Congratulations!  Your Cloud Function is now live and receives events from your source bucket.
 

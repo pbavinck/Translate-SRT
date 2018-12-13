@@ -198,7 +198,13 @@ exports.translateSRTFiles = (event) => {
  */
 function processData(data) {
   // Convert single string to array of individual lines
-  let structure = data.split(/\n/);
+  let structure;
+
+  if( data.indexOf('\r') !== -1 ) {
+    structure = data.split(/\r\n/);
+  } else {
+    structure = data.split(/\n/);
+  }
 
   // Prepare the structure
   let resultData = {

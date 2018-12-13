@@ -61,3 +61,4 @@ typings/
 .vscode/
 plb_private_comments.js
 .eslintrc.json
+package-lock.json
