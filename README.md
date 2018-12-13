@@ -89,7 +89,7 @@ Finished.
 
 1.  Use the following command to deploy the code to Google Cloud Function.
 
-        gcloud functions deploy translateSRTFiles --stage-bucket <<staging bucket name>> --trigger-bucket <<source bucket name>>
+        gcloud functions deploy translateSRTFiles --region=<<regio>> --stage-bucket <<staging bucket name>> --trigger-resource <<source bucket name>> --trigger-event google.storage.object.finalize
 
 1.  Congratulations!  Your Cloud Function is now live and receives events from your source bucket.
 
