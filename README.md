@@ -3,9 +3,9 @@ This is not an officially supported Google product. Written code can be used as 
 
 ## Translate-SRT
 
-Translate-SRT is a demonstration of using Google Cloud Functions. The demo leverages the Google Translate API to translate a subtitle text file file in [SubRip format](https://en.wikipedia.org/wiki/SubRip) from one language to another once it is placed in a Google Cloud Storage bucket. Current code specifies from `en` (english) to `nl` (Dutch), but this is easily altered.
+Translate-SRT is a demonstration of using Google Cloud Functions. The demo leverages the Google Translate API to translate a subtitle text file in [SubRip format](https://en.wikipedia.org/wiki/SubRip) from one language to another once it is placed in a Google Cloud Storage bucket. Current code specifies from `en` (english) to `nl` (Dutch), but this is easily altered.
 
-The Cloud Function is triggered when a new subtitle is stored in a predfined Cloud Storage bucket. After finishing the translation, a new subtitle file with the same timings is stored in a second predfined Cloud Storage bucket.
+The Cloud Function is triggered when a new subtitle is stored in a predfined Cloud Storage bucket. After finishing the translation, a new subtitle file with the same timings is stored in a second predefined Cloud Storage bucket.
 
 ## Getting the sample code
 
@@ -44,13 +44,10 @@ We assume you already have `nodeJS` and `npm` installed. Before you can run the 
 
 1. Enter your source and target bucket names in the environment variables `TEST_BUCKET` and `TARGET_BUCKET` as well
 
-1. Add the location of your [service account credentials](https://cloud.google.com/docs/authentication/getting-started#creating_a_service_account) to `GOOGLE_APPLICATION_CREDENTIALS` environment variable.This enables the client libraries to use the [application default credentials](https://cloud.google.com/docs/authentication/production). In VSCode this can be done by adding the following `env` line to your `launch.json`.
+1. Add the location of your [service account credentials](https://cloud.google.com/docs/authentication/getting-started#creating_a_service_account) to the `GOOGLE_APPLICATION_CREDENTIALS` environment variable. This enables the client libraries to use the [application default credentials](https://cloud.google.com/docs/authentication/production). In VSCode this can be done by adding the following `env` line to your `launch.json`.
 
 ```json
 {
-  // Use IntelliSense to learn about possible attributes.
-  // Hover to view descriptions of existing attributes.
-  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
     {
@@ -89,7 +86,7 @@ Finished.
 
 1.  Use the following command to deploy the code to Google Cloud Function.
 
-        gcloud functions deploy translateSRTFiles --region=<<regio>> --stage-bucket <<staging bucket name>> --trigger-resource <<source bucket name>> --trigger-event google.storage.object.finalize
+        gcloud functions deploy translateSRTFiles --region=<<region>> --stage-bucket <<staging bucket name>> --trigger-resource <<source bucket name>> --trigger-event google.storage.object.finalize
 
 1.  Congratulations!  Your Cloud Function is now live and receives events from your source bucket.
 
