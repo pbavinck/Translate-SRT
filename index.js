@@ -43,6 +43,7 @@ const fs = require('fs');
 const path = require('path');
 
 const TARGET_BUCKET = process.env.TARGET_BUCKET;
+const CUSTOM_MESSAGE = process.env.CUSTOM_MESSAGE;
 const MAX_SEGMENT_SIZE = 128;                             // The max number of sentences to translate with single request
 const SOURCE_LANGUAGE = 'en';                             // Language to translate from
 const TARGET_LANGUAGE = 'nl';                             // Language to translate to
@@ -135,6 +136,9 @@ exports.translateSRTFiles = (event) => {
       }
     })
     .then( () => {
+      // Add custom message
+      content.output = ['1','00:00:01,000 --> 00:00:09,000',CUSTOM_MESSAGE,''].concat(content.output);
+
       let output = content.output.join('\n');
       let localFilename = `/tmp/${translatedFilename}`;
       
@@ -218,8 +222,10 @@ function processData(data) {
     let matches = element.match(REGEX_INDEX_LINE);
     if(matches) {
       // Line ooks like a single number
-      resultData.sentences.push(matches[0]);
-      resultData.output.push(matches[0]);
+      // resultData.sentences.push(matches[0]);
+      // resultData.output.push(matches[0]);
+      resultData.sentences.push((parseInt(matches[0])+1).toString()); // Adding +1 to allow for custom message
+      resultData.output.push((parseInt(matches[0])+1).toString());
       return;
     }
   
