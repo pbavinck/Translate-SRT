@@ -14,7 +14,6 @@ Get the latest sample code from GitHub using Git or download the repository as a
 
     git clone https://github.com/pbavinck/Translate-SRT.git
 
-
 ## Before you begin
 
 1.  Download and install the [Google Cloud
@@ -26,47 +25,50 @@ Get the latest sample code from GitHub using Git or download the repository as a
 1.  Initialize `gcloud`, set your project ID and [authorize the Cloud SDK](https://cloud.google.com/sdk/docs/authorizing)
 
         gcloud init
-       
+
 1.  Enable the [Google Translate API in Cloud Console](https://console.cloud.google.com/apis/library)
 
-1. Create three buckets on Google Cloud Storage. One for staging the Cloud Function code (staging bucket). One for the to be translated subtitle files, which is the bucket that triggers the Cloud Function (source bucket). And one for storing the translated subtitle files (target bucket).
-
+1.  Create three buckets on Google Cloud Storage. One for staging the Cloud Function code (staging bucket). One for the to be translated subtitle files, which is the bucket that triggers the Cloud Function (source bucket). And one for storing the translated subtitle files (target bucket).
 
 ## Run Locally
 
 We assume you already have `nodeJS` and `npm` installed. Before you can run the code locally, which will still use the remote Google Cloud buckets and the remote Google Translate API, you need to do the following:
 
-1. From within the Translate-SRT folder, install the required node dependencies:
+1.  From within the Translate-SRT folder, install the required node dependencies:
 
         npm install
 
-1. Copy the file `.env_sample` to a new file with the name `.env`
+1.  Copy the file `.env_sample` to a new file with the name `.env`
 
-1. Enter your source and target bucket names in the environment variables `TEST_BUCKET` and `TARGET_BUCKET` as well
+1.  Enter your source and target bucket names in the environment variables `TEST_BUCKET` and `TARGET_BUCKET` as well
 
-1. Add the location of your [service account credentials](https://cloud.google.com/docs/authentication/getting-started#creating_a_service_account) to the `GOOGLE_APPLICATION_CREDENTIALS` environment variable. This enables the client libraries to use the [application default credentials](https://cloud.google.com/docs/authentication/production). In VSCode this can be done by adding the following `env` line to your `launch.json`.
+1.  Add the location of your [service account credentials](https://cloud.google.com/docs/authentication/getting-started#creating_a_service_account) to the `GOOGLE_APPLICATION_CREDENTIALS` environment variable. This enables the client libraries to use the [application default credentials](https://cloud.google.com/docs/authentication/production). In VSCode this can be done by adding the following `env` line to your `launch.json`.
 
 ```json
 {
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "Launch Program",
-      "program": "${workspaceFolder}/index.js",
-      "env": { "GOOGLE_APPLICATION_CREDENTIALS": "/the-path-to-my/service-account-credentials.json" }
-    }
-  ]
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Program",
+            "program": "${workspaceFolder}/index.js",
+            "env": {
+                "GOOGLE_APPLICATION_CREDENTIALS": "/the-path-to-my/service-account-credentials.json"
+            }
+        }
+    ]
 }
 ```
-1. Put a sample text file in SubRip format in your source bucket (with extension .txt as opposed to .srt)
 
-1. Run the test using the command:
+1.  Put a sample text file in SubRip format in your source bucket (with extension .txt as opposed to .srt)
+
+1.  Run the test using the command:
 
         node test.js
 
 If all goes well you should see output similar to:
+
 ```
 Processing new text file: sample-en.txt (text/plain)
 Lines read: 7954
@@ -86,11 +88,10 @@ Finished.
 
 1.  Use the following command to deploy the code to Google Cloud Function.
 
-        gcloud functions deploy translateSRTFiles --region=<<region>> --stage-bucket <<staging bucket name>> --trigger-resource <<source bucket name>> --trigger-event google.storage.object.finalize
+        gcloud functions deploy translateSRTFiles --runtime nodejs8 --region=<<region>> --stage-bucket <<staging bucket name>> --trigger-resource <<source bucket name>> --trigger-event google.storage.object.finalize
 
-1.  Congratulations!  Your Cloud Function is now live and receives events from your source bucket.
+1.  Congratulations! Your Cloud Function is now live and receives events from your source bucket.
 
 ## Licensing
 
-* See [LICENSE](LICENSE)
-
+-   See [LICENSE](LICENSE)
